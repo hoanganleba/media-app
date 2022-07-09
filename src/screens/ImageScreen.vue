@@ -23,15 +23,15 @@
   </on-click-outside>
 
   <div
-    class="flex items-center w-full h-full overflow-hidden duration-300 ease-in-out rounded-xl transform-gpu"
+    class="flex items-center w-full h-full overflow-hidden duration-300 ease-in-out transform-gpu"
   >
     <prev-slide-button
       :class="{ 'left-8': !isOpenPreview, 'left-[16rem]': isOpenPreview }"
       class="absolute z-10 duration-300 -translate-y-1/2 opacity-0 bg-macos-sidebar/50 dark:bg-macos-sidebarDark/50 bg-blend-overlay backdrop-blur-xl rounded-xl top-1/2 hover:opacity-100 transform-gpu"
       @click="
         () => {
-          handlePrevImage();
-          reset();
+          handlePrevImage()
+          reset()
         }
       "
     />
@@ -40,8 +40,8 @@
       class="absolute z-10 duration-300 -translate-y-1/2 opacity-0 bg-macos-sidebar/50 dark:bg-macos-sidebarDark/50 bg-blend-overlay backdrop-blur-xl rounded-xl top-1/2 right-8 hover:opacity-100 transform-gpu"
       @click="
         () => {
-          handleNextImage();
-          reset();
+          handleNextImage()
+          reset()
         }
       "
     />
@@ -58,7 +58,7 @@
       @handleRotateRight="rotateRight"
     />
 
-    <div class="w-auto h-full mx-auto" ref="imageContainer">
+    <div class="h-full mx-auto w-fit" ref="imageContainer">
       <img
         ref="image"
         draggable="false"
@@ -73,34 +73,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { OnClickOutside } from "@vueuse/components";
-import ImageControlBar from "../components/Images/ImageControlBar.vue";
-import AppPreviewSideBar from "../components/AppPreviewSideBar.vue";
-import AppPreviewSideBarItem from "../components/AppPreviewSideBarItem.vue";
-import PrevSlideButton from "../components/Buttons/PrevSlideButton.vue";
-import NextSlideButton from "../components/Buttons/NextSlideButton.vue";
-import loadFile from "../utils/tauri/loadFile";
+import { ref, watch } from 'vue'
+import { OnClickOutside } from '@vueuse/components'
+import ImageControlBar from '../components/Images/ImageControlBar.vue'
+import AppPreviewSideBar from '../components/AppPreviewSideBar.vue'
+import AppPreviewSideBarItem from '../components/AppPreviewSideBarItem.vue'
+import PrevSlideButton from '../components/Buttons/PrevSlideButton.vue'
+import NextSlideButton from '../components/Buttons/NextSlideButton.vue'
+import loadFile from '../utils/tauri/loadFile'
 
-import usePreviewSideBar from "../services/usePreviewSideBar";
-import usePlayPause from "../services/usePlayPause";
-import useProgress from "../services/useProgress";
-import useControlImage from "../services/useControlImage";
-import { onKeyStroke, useElementHover, useIdle, useMagicKeys } from "@vueuse/core";
-import { useStore } from "../store/useStore";
-import { useRouter } from "vue-router";
+import usePreviewSideBar from '../services/usePreviewSideBar'
+import usePlayPause from '../services/usePlayPause'
+import useProgress from '../services/useProgress'
+import useControlImage from '../services/useControlImage'
+import {
+  onKeyStroke,
+  useElementHover,
+  useIdle,
+  useMagicKeys,
+} from '@vueuse/core'
+import { useStore } from '../store/useStore'
+import { useRouter } from 'vue-router'
 
-const store = useStore();
-const router = useRouter();
-const { setAlertActive } = store.alertStore as any;
+const store = useStore()
+const router = useRouter()
+const { setAlertActive } = store.alertStore as any
 
-const image = ref<HTMLImageElement>();
-const imageContainer = ref();
-const progressbar = ref<HTMLDivElement>();
+const image = ref<HTMLImageElement>()
+const imageContainer = ref()
+const progressbar = ref<HTMLDivElement>()
 
-const { isOpenPreview, open, close } = usePreviewSideBar();
-const { isPlay, pause, handlePlayPauseEvent } = usePlayPause();
-const { zoomIn, zoomOut, rotateLeft, rotateRight, reset } = useControlImage(image);
+const { isOpenPreview, open, close } = usePreviewSideBar()
+const { isPlay, pause, handlePlayPauseEvent } = usePlayPause()
+const { zoomIn, zoomOut, rotateLeft, rotateRight, reset } =
+  useControlImage(image)
 const {
   selectedImage,
   currentIndex,
@@ -112,87 +118,93 @@ const {
   handleNextImage,
   handlePrevImage,
   selectImage,
-} = store.imageStore as any;
+} = store.imageStore as any
 
-const { openVideoFolder } = store.videoStore as any;
+const { openVideoFolder } = store.videoStore as any
 
-let isHovered = useElementHover(imageContainer);
+let isHovered = useElementHover(imageContainer)
 
-const { idle } = useIdle(1000);
+const { idle } = useIdle(1000)
 
 watch(idle, (newVal) => {
   if (newVal) {
-    isHovered.value = false;
+    isHovered.value = false
   } else {
-    isHovered.value = true;
+    isHovered.value = true
   }
-});
+})
 
-const { start, remove } = useProgress(progressbar, {
+const { interval, start, remove } = useProgress(progressbar, {
   onDoneProgress: () => {
-    handleNextImage();
-    reset();
+    handleNextImage()
+    reset()
   },
-});
+})
 
-onKeyStroke("ArrowRight", () => {
-  handleNextImage();
-  reset();
-});
+const { speed } = store.progressSpeedStore as any
 
-onKeyStroke("ArrowLeft", () => {
-  handlePrevImage();
-  reset();
-});
+watch(speed, (newVal) => {
+  ;(interval.value as any) = newVal
+})
 
-onKeyStroke("ArrowUp", () => {
-  zoomIn();
-});
+onKeyStroke('ArrowRight', () => {
+  handleNextImage()
+  reset()
+})
 
-onKeyStroke("ArrowDown", () => {
-  zoomOut();
-});
+onKeyStroke('ArrowLeft', () => {
+  handlePrevImage()
+  reset()
+})
+
+onKeyStroke('ArrowUp', () => {
+  zoomIn()
+})
+
+onKeyStroke('ArrowDown', () => {
+  zoomOut()
+})
 
 const _openImageFolder = () => {
   openImageFolder(
     () => {},
     () => {
-      setAlertActive(true, "No image was found!");
+      setAlertActive(true, 'No image was found!')
     }
-  );
-};
+  )
+}
 
 const _openVideoFolder = () => {
   openVideoFolder(
     () => {
-      router.push("/videos");
+      router.push('/videos')
     },
     () => {
-      setAlertActive(true, "No video was found!");
+      setAlertActive(true, 'No video was found!')
     }
-  );
-};
+  )
+}
 
 const handlePlayPause = () => {
   if (currentIndex === numOfImages - 1) {
-    pause();
-    remove();
+    pause()
+    remove()
   } else {
-    handlePlayPauseEvent(start, remove);
+    handlePlayPauseEvent(start, remove)
   }
-};
+}
 
-onKeyStroke(" ", () => {
-  handlePlayPause();
-});
+onKeyStroke(' ', () => {
+  handlePlayPause()
+})
 
-const { Meta_O, Meta_I } = useMagicKeys();
+const { Meta_O, Meta_I } = useMagicKeys()
 
 watch(Meta_O, () => {
-  _openImageFolder();
-});
+  _openImageFolder()
+})
 
 watch(Meta_I, () => {
-  _openVideoFolder();
-});
+  _openVideoFolder()
+})
 </script>

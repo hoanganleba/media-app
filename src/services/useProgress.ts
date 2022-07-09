@@ -10,6 +10,7 @@ const useProgress = (
 ) => {
   const progressbarIntervalId = ref<ReturnType<typeof setTimeout>>()
   const progressbarWidth = ref<number>(0)
+  const interval = ref(150)
 
   const progressbarFrame = () => {
     if (progressbarWidth.value >= 100) {
@@ -22,7 +23,7 @@ const useProgress = (
   }
 
   const start = () => {
-    progressbarIntervalId.value = setInterval(progressbarFrame, 150)
+    progressbarIntervalId.value = setInterval(progressbarFrame, interval.value)
   }
 
   const remove = () => {
@@ -31,7 +32,7 @@ const useProgress = (
     progressbar.value!.style.width = progressbarWidth.value + '%'
   }
 
-  return { start, remove }
+  return { interval, start, remove }
 }
 
 export default useProgress

@@ -18,7 +18,7 @@
   </on-click-outside>
 
   <div
-    class="relative flex items-center w-full h-full duration-300 ease-in-out transform-gpu"
+    class="relative flex items-center w-full h-full"
   >
     <video-control-bar
       :disabledButton="videos.length === 0"
@@ -28,7 +28,7 @@
       @handlePlayPause="handlePlayPause"
     />
 
-    <div class="w-auto h-full mx-auto" ref="videoContainer">
+    <div class="h-full mx-auto w-fit" ref="videoContainer">
       <video
         class="w-auto h-full"
         ref="video"

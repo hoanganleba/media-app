@@ -4,4 +4,5 @@ export const useStore = () => ({
   imageStore: inject('image-store'),
   videoStore: inject('video-store'),
   alertStore: inject('alert-store'),
+  progressSpeedStore: inject('progress-speed-store')
 })

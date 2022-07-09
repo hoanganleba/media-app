@@ -1,5 +1,5 @@
 <template>
-  <div class="py-20 px-12">
+  <div class="px-12 py-20">
     <h1
       class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600"
     >
@@ -7,17 +7,17 @@
     </h1>
     <div class="inline-block mt-8 w-fit">
       <open-folder-button
-        class="bg-macos-sidebar/50 rounded-xl w-fit"
+        class="bg-macos-sidebar/50 rounded-xl w-fit dark:bg-macos-sidebarDark/50"
         @click="_openImageFolder"
       />
-      <p class="text-macos-text text-sm mt-2.5">Open Image</p>
+      <p class="text-macos-text dark:text-macos-textDark text-sm mt-2.5">Open Image</p>
     </div>
     <div class="inline-block mt-8 ml-12 w-fit">
       <open-folder-button
-        class="bg-macos-sidebar/50 rounded-xl w-fit"
+        class="bg-macos-sidebar/50 rounded-xl w-fit dark:bg-macos-sidebarDark/50"
         @click="_openVideoFolder"
       />
-      <p class="text-macos-text text-sm mt-2.5">Open Video</p>
+      <p class="text-macos-text dark:text-macos-textDark text-sm mt-2.5">Open Video</p>
     </div>
   </div>
 </template>
