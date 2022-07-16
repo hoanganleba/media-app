@@ -11,7 +11,11 @@ const usePreviewSideBar = () => {
     isOpenPreview.value = false
   }
 
-  return { isOpenPreview, open, close }
+  const toggleOpenPreview = () => {
+    isOpenPreview.value = !isOpenPreview.value
+  }
+
+  return { isOpenPreview, toggleOpenPreview, open, close }
 }
 
 export default usePreviewSideBar

@@ -4,47 +4,31 @@
     class="absolute z-10 duration-300 -translate-x-1/2 hover:opacity-100 bottom-20 left-1/2 bg-macos-sidebar/50 dark:bg-macos-sidebarDark/50 transform-gpu bg-blend-overlay backdrop-blur-xl rounded-xl"
   >
     <div class="relative flex w-full">
-      <toggle-open-preview-button
-        :disabled="disabledButton"
-        @click="emit('handleToggleOpenPreview')"
-      />
+      <toggle-open-preview-button @click="emit('handleToggleOpenPreview')" />
       <play-pause-button
-        :disabled="disabledButton"
         :isPlay="props.isPlay"
         @click="emit('handlePlayPause')"
       />
-      <rotate-left-button
-        :disabled="disabledButton"
-        @click="emit('handleRotateLeft')"
-      />
-      <rotate-right-button
-        :disabled="disabledButton"
-        @click="emit('handleRotateRight')"
-      />
-      <zoom-in-button
-        :disabled="disabledButton"
-        @click="emit('handleZoomIn')"
-      />
-      <zoom-out-button
-        :disabled="disabledButton"
-        @click="emit('handleZoomOut')"
-      />
+      <rotate-left-button @click="emit('handleRotateLeft')" />
+      <rotate-right-button @click="emit('handleRotateRight')" />
+      <zoom-in-button @click="emit('handleZoomIn')" />
+      <zoom-out-button @click="emit('handleZoomOut')" />
       <on-click-outside @trigger="close">
         <more-button @click="toggleShowSpeedSetting" />
         <div
           v-if="showSpeedSetting"
-          class="absolute right-0 grid gap-2 p-2 w-24 text-sm cursor-pointer rounded-md text-macos-text dark:text-macos-textDark bg-macos-sidebar/50 dark:bg-macos-sidebarDark/50 bg-blend-overlay backdrop-blur-xl -top-[5.2rem]"
+          class="absolute right-0 grid gap-2 py-2 px-1.5 w-28 text-sm cursor-pointer rounded-lg text-macos-text dark:text-macos-textDark bg-macos-sidebar/50 dark:bg-macos-sidebarDark/50 bg-blend-overlay backdrop-blur-xl -top-[5.5rem]"
         >
           <div
-            class="px-2 py-1 rounded"
-            :class="{ 'bg-macos-primary': speed === 150 }"
+            class="px-2 py-1 rounded-md"
+            :class="{ 'bg-macos-primary text-macos-textDark': speed === 150 }"
             @click="_setSpeed(150)"
           >
             Normal
           </div>
           <div
-            class="px-2 py-1 rounded"
-            :class="{ 'bg-macos-primary': speed === 50 }"
+            class="px-2 py-1 rounded-md"
+            :class="{ 'bg-macos-primary text-macos-textDark': speed === 50 }"
             @click="_setSpeed(50)"
           >
             Fast
@@ -86,7 +70,6 @@ const _setSpeed = (value: any) => {
 }
 
 const props = defineProps<{
-  disabledButton: boolean
   isPlay: boolean
   isHovered: boolean
 }>()

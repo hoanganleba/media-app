@@ -12,10 +12,10 @@
         class="w-full h-auto rounded select-none"
         :src="props.src"
       />
-      <video v-if="isVideo(props.src)" :src="props.src"></video>
+      <video class="pointer-events-none" v-if="isVideo(props.src)" :src="props.src"></video>
     </div>
     <p
-      class="mt-3 text-xs text-center text-macos-text dark:text-macos-textDark break-all"
+      class="mt-3 text-xs text-center break-all text-macos-text dark:text-macos-textDark"
     >
       {{ props.label }}
     </p>

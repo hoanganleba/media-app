@@ -11,7 +11,7 @@
       @scrollEnd="getMoreImages"
     >
       <app-preview-side-bar-item
-        @click="selectImage(index, item.path)"
+        @click="_selectImage(index, item.path)"
         v-for="(item, index) in images"
         :key="index"
         :id="index"
@@ -47,7 +47,6 @@
     />
 
     <image-control-bar
-      :disabledButton="images.length === 0"
       :isPlay="isPlay"
       :isHovered="isHovered"
       @handleToggleOpenPreview="open"
@@ -103,7 +102,7 @@ const image = ref<HTMLImageElement>()
 const imageContainer = ref()
 const progressbar = ref<HTMLDivElement>()
 
-const { isOpenPreview, open, close } = usePreviewSideBar()
+const { isOpenPreview, open, close, toggleOpenPreview } = usePreviewSideBar()
 const { isPlay, pause, handlePlayPauseEvent } = usePlayPause()
 const { zoomIn, zoomOut, rotateLeft, rotateRight, reset } =
   useControlImage(image)
@@ -122,6 +121,13 @@ const {
 
 const { openVideoFolder } = store.videoStore as any
 
+const _selectImage = (index: any, path: any) => {
+  selectImage(index, path)
+  reset()
+  pause()
+  remove()
+}
+
 let isHovered = useElementHover(imageContainer)
 
 const { idle } = useIdle(1000)
@@ -136,9 +142,16 @@ watch(idle, (newVal) => {
 
 const { interval, start, remove } = useProgress(progressbar, {
   onDoneProgress: () => {
-    handleNextImage()
     reset()
+    handleNextImage()
   },
+})
+
+watch(currentIndex, () => {
+  if (currentIndex.value === numOfImages.value - 1) {
+    pause()
+    remove()
+  }
 })
 
 const { speed } = store.progressSpeedStore as any
@@ -150,19 +163,23 @@ watch(speed, (newVal) => {
 onKeyStroke('ArrowRight', () => {
   handleNextImage()
   reset()
+  isHovered.value = false
 })
 
 onKeyStroke('ArrowLeft', () => {
   handlePrevImage()
   reset()
+  isHovered.value = false
 })
 
 onKeyStroke('ArrowUp', () => {
   zoomIn()
+  isHovered.value = false
 })
 
 onKeyStroke('ArrowDown', () => {
   zoomOut()
+  isHovered.value = false
 })
 
 const _openImageFolder = () => {
@@ -186,7 +203,7 @@ const _openVideoFolder = () => {
 }
 
 const handlePlayPause = () => {
-  if (currentIndex === numOfImages - 1) {
+  if (currentIndex.value === numOfImages.value - 1) {
     pause()
     remove()
   } else {
@@ -196,6 +213,12 @@ const handlePlayPause = () => {
 
 onKeyStroke(' ', () => {
   handlePlayPause()
+  isHovered.value = false
+})
+
+onKeyStroke('Tab', () => {
+  toggleOpenPreview()
+  isHovered.value = false
 })
 
 const { Meta_O, Meta_I } = useMagicKeys()
